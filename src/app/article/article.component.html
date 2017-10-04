@@ -1,0 +1,149 @@
+<div class="container">
+    <div class="container-fluid">
+      <div class="col-lg-9 col-lg-offset-2">
+        <div class="page-header">
+          <h3>{{titleComponent}}</h3>
+        </div>
+
+        <!--message validation-->
+        <div *ngIf="statusCode; else processing">
+
+          <!--delete-->
+          <div *ngIf="statusCode === 204"[ngClass] = "'success'">
+            <div class="col-xs-12">
+              <div class="alert alert-success alert-dismissible">
+                <button class="close" type="button" data-dismiss="alert">&times;</button>
+                Data berhasil dihapus !
+              </div>
+            </div>
+          </div>
+
+          <!--conflict-->
+          <div *ngIf="statusCode === 409"[ngClass]="'success'">
+            <div class="col-xs-12">
+              <div class="alert alert-danger alert-dismissible">
+                <button class="close" type="button" data-dismiss="alert">
+                  &times;
+                </button>
+                Oopps..data sama !
+              </div>
+            </div>
+          </div>
+
+          <!--update-->
+          <div *ngIf="statusCode === 200"[ngClass]="'success'">
+            <div class="col-xs-12">
+              <div class="alert alert-warning alert-dismissible">
+                <button class="close" type="button" data-dismiss="alert">&times;</button>
+                Data berhasil di update !
+              </div>
+            </div>
+          </div>
+
+          <!--simpan-->
+          <div *ngIf="statusCode === 201"[ngClass]="'success'">
+            <div class="col-xs-12">
+              <div class="alert alert-info alert-dismissible">
+                <button class="close" type="button" data-dismiss="alert">&times;</button>
+                Data berhasil disimpan !
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!--message validation-->
+
+        <!--tabel-->
+        <div class="page-header">
+          <table class="table table-hover table-stripped">
+            <thead>
+              <tr>
+              <th>idarticle</th>
+              <th>title</th>
+              <th>category</th>
+              <th>option</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor=" let artic of articles">
+                <td>{{artic.idarticle}}</td>
+                <td>{{artic.title}}</td>
+                <td>{{artic.category}}</td>
+                <td>
+                  <button class="btn btn-success"
+                  (click)="getEditArticle(artic.idarticle)">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    update
+                  </button>
+                  <button class="btn btn-default"
+                  (click)="getDropArticles(artic.idarticle)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    hapus
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>idarticle</th>
+                <th>title</th>
+                <th>category</th>
+                <th>option</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!--buffering-->
+      <ng-template #processing>
+        <img *ngIf="requestProcessing" src="assets/image/loading.gif"/>
+      </ng-template>
+
+      <!--form-->
+        <div class="col-lg-8 col-lg-offset-2">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 *ngIf="!IdarticleToUpdate">Manage Form Article</h4>
+              <h4 *ngIf="IdarticleToUpdate">Update Article {{IdarticleToUpdate}}</h4>
+            </div>
+            <div class="panel-body">
+              <form [formGroup]="articleForm"
+              (ngSubmit)="onArticleFormSubmit()"
+              class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">title :</label>
+                  <div class="col-lg-7">
+                    <input formControlName="title" class="form-control" />
+                    <label *ngIf="articleForm.get('title').invalid && processValidation"
+                    [ngClass]="'error'" style="color: crimson">Enter title please..</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">category :</label>
+                  <div class="col-lg-7">
+                    <input formControlName="category" class="form-control" />
+                    <label *ngIf="articleForm.get('category').invalid && processValidation"
+                    [ngClass]="'error'" style="color: crimson">Enter category please..</label>
+                  </div>
+                </div>
+                <div class="pane-footer">
+                  <button *ngIf="!IdarticleToUpdate" class="btn btn-success">
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                    Yes, Save it!
+                  </button>
+                  <button *ngIf="IdarticleToUpdate" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    Yes, Update it !
+                  </button>
+                  <button (click)="backToCreateArticle()" class="btn btn-default">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    No, Cancel it!
+                  </button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
